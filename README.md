@@ -1,2 +1,4 @@
 # kintoneManagerV8
 kintoneManagerV8
+
+スクリプトID　1dtIBGa-2Ij4CSWl8cs4hnDPjVz43rnIrG_oT_nBTinwob2yBAW4anL_X
