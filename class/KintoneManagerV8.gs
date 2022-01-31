@@ -1,5 +1,5 @@
 'use strict'
-class KintoneManagerV8 {
+class KintoneManagerV8_ {
   /**
    * kintoneのAPIに関するコンストラクタ
    * @param {string} subdomain - サブドメイン
@@ -165,18 +165,18 @@ class KintoneManagerV8 {
   getAsObject(response) {
     const json = response.getContentText();
     const responceCode = response.getResponseCode();
-    if(responceCode === 200){
+    if (responceCode === 200) {
       const object = JSON.parse(json);
       return object;
-    }else if(responceCode === 401){
+    } else if (responceCode === 401) {
       throw new Error("認証エラーです。");
-    }else{
+    } else {
       throw new Error(json);
     }
 
   }
   /**
-   * 登録されているレコードを1件取得して､レコードを登録するためのテンプレートとなるJSONをログ出力します｡
+   * 登録されているレコードを1件取得して､レコードを登録するためのテンプレートとなるJSONをログ出力する関数
    */
   getRecordTemplateJson() {
     const searchresponse = this.getSearchResultObject(appName, "")
@@ -292,18 +292,53 @@ class KintoneManagerV8 {
   _authorizationHeader(app) {
     let auth = {};
     if (this.authorization) {
-      // Password authentication
+      // Password 認証
       auth["X-Cybozu-Authorization"] = this.authorization;
     } else if (app.token) {
-      // API token authentication
+      // API token 認証
       auth["X-Cybozu-API-Token"] = app.token;
     } else {
       throw new Error("kintone APIを呼ぶための認証情報がありません。");
     }
     //ベーシック認証
-    if(app.basicUserName){
+    if (app.basicUserName) {
       auth["Authorization"] = "Basic " + Utilities.base64Encode(app.basicUserName + ":" + app.basicPass);
     }
     return auth;
   }
 }
+
+
+/**
+ * KintoneManagerV8をインスタンス化するためのファクトリメソッド
+ * @param {string} subdomain - サブドメイン
+ * @param {object} apps - アプリケーションの情報
+ * @param {string} user (optional) -  ユーザー名 または  authentication information: base64("USER:PASS")
+ * @param {string} pass (optional)  - パスワード
+ * @return {KintoneManagerV8} 
+ */
+function KintoneManagerV8(subdomain, apps, user, pass) {
+
+  if (arguments.length === 2) {
+    return new KintoneManagerV8_(subdomain, apps);
+  }
+  if (arguments.length === 3) {
+    return new KintoneManagerV8_(subdomain, apps, user);
+  } 
+  if (arguments.length === 4) {
+    return new KintoneManagerV8_(subdomain, apps, user,pass);
+  } 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
